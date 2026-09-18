@@ -77,6 +77,35 @@ export async function createContentItem(formData: FormData) {
   revalidatePath("/");
 }
 
+export async function updateContentItem(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  const companyId = String(formData.get("companyId") ?? "");
+  const title = String(formData.get("title") ?? "").trim();
+  const description = (String(formData.get("description") ?? "").trim() || null) as
+    | string
+    | null;
+  const channel = String(formData.get("channel") ?? "OTHER") as ContentChannel;
+  const format = String(formData.get("format") ?? "POST") as ContentFormat;
+  const status = String(formData.get("status") ?? "IDEA") as ContentStatus;
+  const scheduledAtRaw = String(formData.get("scheduledAt") ?? "");
+  if (!id || !companyId || !title || !scheduledAtRaw) return;
+
+  await prisma.contentItem.update({
+    where: { id },
+    data: {
+      companyId,
+      title,
+      description,
+      channel,
+      format,
+      status,
+      scheduledAt: new Date(scheduledAtRaw),
+    },
+  });
+  revalidatePath("/calendrier");
+  revalidatePath("/");
+}
+
 export async function updateContentItemStatus(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const status = String(formData.get("status") ?? "") as ContentStatus;

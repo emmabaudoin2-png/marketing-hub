@@ -1,21 +1,11 @@
-import { format } from "date-fns";
-import { fr } from "date-fns/locale";
 import { prisma } from "@/lib/prisma";
 import { ALL_COMPANIES, getCompanies, getSelectedCompanyId } from "@/lib/selection";
 import { companyFilter } from "@/lib/queries";
-import { createContentItem, deleteContentItem, updateContentItemStatus } from "@/app/actions";
-import { Card, Badge } from "@/components/ui";
-import { StatusSelect } from "@/components/status-select";
-import { DeleteButton } from "@/components/delete-button";
+import { createContentItem } from "@/app/actions";
+import { Card } from "@/components/ui";
+import { ContentItemRow } from "@/components/content-item-row";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
-import {
-  contentChannelLabels,
-  contentFormatColors,
-  contentFormatLabels,
-  contentStatusColors,
-  contentStatusLabels,
-} from "@/lib/labels";
-import type { ContentStatus } from "@prisma/client";
+import { contentChannelLabels, contentFormatLabels, contentStatusLabels } from "@/lib/labels";
 
 export default async function CalendarPage() {
   const selectedId = await getSelectedCompanyId();
@@ -125,43 +115,7 @@ export default async function CalendarPage() {
         ) : (
           <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
             {items.map((item) => (
-              <li key={item.id} className="flex flex-wrap items-center justify-between gap-3 py-3">
-                <div className="min-w-0 flex-1">
-                  <div className="flex flex-wrap items-center gap-2">
-                    <p className="font-medium text-zinc-800 dark:text-zinc-100">{item.title}</p>
-                    <Badge className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
-                      {contentChannelLabels[item.channel]}
-                    </Badge>
-                    <Badge className={contentFormatColors[item.format]}>
-                      {contentFormatLabels[item.format]}
-                    </Badge>
-                    {isAll && (
-                      <Badge
-                        className="bg-transparent text-zinc-500"
-                        style={{ color: item.company.color }}
-                      >
-                        {item.company.name}
-                      </Badge>
-                    )}
-                  </div>
-                  {item.description && (
-                    <p className="mt-1 text-sm text-zinc-500">{item.description}</p>
-                  )}
-                  <p className="mt-1 text-xs text-zinc-400">
-                    {format(item.scheduledAt, "EEEE d MMMM yyyy", { locale: fr })}
-                  </p>
-                </div>
-                <div className="flex items-center gap-3">
-                  <StatusSelect
-                    id={item.id}
-                    value={item.status}
-                    options={statusOptions}
-                    action={updateContentItemStatus}
-                    className={`${contentStatusColors[item.status as ContentStatus]} rounded-full border-0 px-2.5 py-1 text-xs font-medium`}
-                  />
-                  <DeleteButton id={item.id} action={deleteContentItem} />
-                </div>
-              </li>
+              <ContentItemRow key={item.id} item={item} companies={companies} isAll={isAll} />
             ))}
           </ul>
         )}
