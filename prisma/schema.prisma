@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Company {
+  id        String        @id @default(cuid())
+  name      String
+  color     String        @default("#6366f1")
+  createdAt DateTime      @default(now())
+  updatedAt DateTime      @updatedAt
+
+  contentItems ContentItem[]
+  tasks        Task[]
+  metrics      MetricEntry[]
+}
+
+enum ContentStatus {
+  IDEA
+  PLANNED
+  IN_PROGRESS
+  SCHEDULED
+  PUBLISHED
+}
+
+enum ContentChannel {
+  INSTAGRAM
+  FACEBOOK
+  LINKEDIN
+  TIKTOK
+  YOUTUBE
+  BLOG
+  EMAIL
+  OTHER
+}
+
+model ContentItem {
+  id          String         @id @default(cuid())
+  title       String
+  description String?
+  channel     ContentChannel @default(OTHER)
+  status      ContentStatus  @default(IDEA)
+  scheduledAt DateTime
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@index([companyId])
+}
+
+enum TaskStatus {
+  TODO
+  IN_PROGRESS
+  DONE
+}
+
+enum TaskPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+model Task {
+  id        String       @id @default(cuid())
+  title     String
+  notes     String?
+  status    TaskStatus   @default(TODO)
+  priority  TaskPriority @default(MEDIUM)
+  dueDate   DateTime?
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@index([companyId])
+}
+
+enum MetricType {
+  FOLLOWERS
+  ENGAGEMENT
+  WEBSITE_VISITORS
+  LEADS
+  BUDGET_SPENT
+  CONVERSIONS
+}
+
+model MetricEntry {
+  id        String     @id @default(cuid())
+  type      MetricType
+  value     Float
+  date      DateTime
+  createdAt DateTime   @default(now())
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@index([companyId])
+  @@index([type])
+}
