@@ -8,7 +8,13 @@ import { Card, Badge } from "@/components/ui";
 import { StatusSelect } from "@/components/status-select";
 import { DeleteButton } from "@/components/delete-button";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
-import { contentChannelLabels, contentStatusColors, contentStatusLabels } from "@/lib/labels";
+import {
+  contentChannelLabels,
+  contentFormatColors,
+  contentFormatLabels,
+  contentStatusColors,
+  contentStatusLabels,
+} from "@/lib/labels";
 import type { ContentStatus } from "@prisma/client";
 
 export default async function CalendarPage() {
@@ -74,6 +80,17 @@ export default async function CalendarPage() {
           </div>
 
           <div>
+            <label className={labelClass}>Type de contenu</label>
+            <select name="format" className={inputClass} defaultValue="POST">
+              {Object.entries(contentFormatLabels).map(([value, label]) => (
+                <option key={value} value={value}>
+                  {label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          <div>
             <label className={labelClass}>Statut</label>
             <select name="status" className={inputClass} defaultValue="IDEA">
               {statusOptions.map((opt) => (
@@ -114,6 +131,9 @@ export default async function CalendarPage() {
                     <p className="font-medium text-zinc-800 dark:text-zinc-100">{item.title}</p>
                     <Badge className="bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-300">
                       {contentChannelLabels[item.channel]}
+                    </Badge>
+                    <Badge className={contentFormatColors[item.format]}>
+                      {contentFormatLabels[item.format]}
                     </Badge>
                     {isAll && (
                       <Badge

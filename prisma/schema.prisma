@@ -38,11 +38,18 @@ enum ContentChannel {
   OTHER
 }
 
+enum ContentFormat {
+  VIDEO
+  POST
+  STORY
+}
+
 model ContentItem {
   id          String         @id @default(cuid())
   title       String
   description String?
   channel     ContentChannel @default(OTHER)
+  format      ContentFormat  @default(POST)
   status      ContentStatus  @default(IDEA)
   scheduledAt DateTime
   createdAt   DateTime       @default(now())

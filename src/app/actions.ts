@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import type {
   ContentChannel,
+  ContentFormat,
   ContentStatus,
   MetricType,
   TaskPriority,
@@ -56,6 +57,7 @@ export async function createContentItem(formData: FormData) {
     | string
     | null;
   const channel = String(formData.get("channel") ?? "OTHER") as ContentChannel;
+  const format = String(formData.get("format") ?? "POST") as ContentFormat;
   const status = String(formData.get("status") ?? "IDEA") as ContentStatus;
   const scheduledAtRaw = String(formData.get("scheduledAt") ?? "");
   if (!companyId || !title || !scheduledAtRaw) return;
@@ -66,6 +68,7 @@ export async function createContentItem(formData: FormData) {
       title,
       description,
       channel,
+      format,
       status,
       scheduledAt: new Date(scheduledAtRaw),
     },

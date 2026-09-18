@@ -1,5 +1,6 @@
 import type {
   ContentChannel,
+  ContentFormat,
   ContentStatus,
   MetricType,
   TaskPriority,
@@ -15,6 +16,18 @@ export const contentChannelLabels: Record<ContentChannel, string> = {
   BLOG: "Blog",
   EMAIL: "Email",
   OTHER: "Autre",
+};
+
+export const contentFormatLabels: Record<ContentFormat, string> = {
+  VIDEO: "Vidéo",
+  POST: "Post",
+  STORY: "Story",
+};
+
+export const contentFormatColors: Record<ContentFormat, string> = {
+  VIDEO: "bg-rose-100 text-rose-700",
+  POST: "bg-indigo-100 text-indigo-700",
+  STORY: "bg-orange-100 text-orange-700",
 };
 
 export const contentStatusLabels: Record<ContentStatus, string> = {
