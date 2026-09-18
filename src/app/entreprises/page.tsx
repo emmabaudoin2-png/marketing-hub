@@ -37,10 +37,29 @@ export default async function CompaniesPage() {
         <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
           {companies.map((company) => (
             <li key={company.id} className="flex flex-wrap items-center gap-3 py-3">
+              {company.logoUrl ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={company.logoUrl}
+                  alt=""
+                  className="h-9 w-9 shrink-0 rounded-full object-cover"
+                />
+              ) : (
+                <span
+                  className="h-9 w-9 shrink-0 rounded-full"
+                  style={{ backgroundColor: company.color }}
+                />
+              )}
               <form action={updateCompany} className="flex flex-1 flex-wrap items-center gap-3">
                 <input type="hidden" name="id" value={company.id} />
                 <input type="color" name="color" defaultValue={company.color} className="h-9 w-12 rounded border border-zinc-300 dark:border-zinc-700" />
                 <input name="name" defaultValue={company.name} required className={`${inputClass} max-w-xs`} />
+                <input
+                  name="logoUrl"
+                  defaultValue={company.logoUrl ?? ""}
+                  placeholder="URL du logo (ex: /logos/monentreprise.png)"
+                  className={`${inputClass} max-w-xs`}
+                />
                 <button type="submit" className="text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400">
                   Enregistrer
                 </button>

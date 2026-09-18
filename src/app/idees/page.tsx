@@ -4,6 +4,7 @@ import { companyFilter } from "@/lib/queries";
 import { createIdea, deleteIdea, promoteIdeaToContent } from "@/app/actions";
 import { Card, Badge } from "@/components/ui";
 import { DeleteButton } from "@/components/delete-button";
+import { CompanyBadge } from "@/components/company-badge";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
 import { contentFormatColors, contentFormatLabels } from "@/lib/labels";
 
@@ -88,9 +89,11 @@ export default async function IdeasPage() {
                   </Badge>
                   <p className="text-sm text-zinc-800 dark:text-zinc-100">{idea.content}</p>
                   {isAll && (
-                    <Badge className="bg-transparent" style={{ color: idea.company.color }}>
-                      {idea.company.name}
-                    </Badge>
+                    <CompanyBadge
+                      name={idea.company.name}
+                      color={idea.company.color}
+                      logoUrl={idea.company.logoUrl}
+                    />
                   )}
                 </div>
                 <div className="flex items-center gap-3">

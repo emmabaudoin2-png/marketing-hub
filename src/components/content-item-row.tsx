@@ -6,6 +6,7 @@ import { fr } from "date-fns/locale";
 import type { Company, ContentItem } from "@prisma/client";
 import { deleteContentItem, updateContentItem, updateContentItemStatus } from "@/app/actions";
 import { Badge } from "@/components/ui";
+import { CompanyBadge } from "@/components/company-badge";
 import { StatusSelect } from "@/components/status-select";
 import { DeleteButton } from "@/components/delete-button";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
@@ -165,9 +166,11 @@ export function ContentItemRow({
             {contentFormatLabels[item.format]}
           </Badge>
           {isAll && (
-            <Badge className="bg-transparent" style={{ color: item.company.color }}>
-              {item.company.name}
-            </Badge>
+            <CompanyBadge
+              name={item.company.name}
+              color={item.company.color}
+              logoUrl={item.company.logoUrl}
+            />
           )}
         </div>
         {item.description && <p className="mt-1 text-sm text-zinc-500">{item.description}</p>}

@@ -8,6 +8,7 @@ import { Card, Badge } from "@/components/ui";
 import { StatusSelect } from "@/components/status-select";
 import { DeleteButton } from "@/components/delete-button";
 import { TaskFilters } from "@/components/task-filters";
+import { CompanyBadge } from "@/components/company-badge";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
 import { taskPriorityColors, taskPriorityLabels, taskStatusColors, taskStatusLabels } from "@/lib/labels";
 import type { TaskPriority, TaskStatus } from "@prisma/client";
@@ -124,12 +125,11 @@ export default async function TasksPage({ searchParams }: { searchParams: Search
                       {taskPriorityLabels[task.priority]}
                     </Badge>
                     {isAll && (
-                      <Badge
-                        className="bg-transparent"
-                        style={{ color: task.company.color }}
-                      >
-                        {task.company.name}
-                      </Badge>
+                      <CompanyBadge
+                        name={task.company.name}
+                        color={task.company.color}
+                        logoUrl={task.company.logoUrl}
+                      />
                     )}
                   </div>
                   {task.notes && <p className="mt-1 text-sm text-zinc-500">{task.notes}</p>}

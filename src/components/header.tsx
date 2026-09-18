@@ -1,4 +1,4 @@
-import { getCompanies, getSelectedCompanyId } from "@/lib/selection";
+import { ALL_COMPANIES, getCompanies, getSelectedCompanyId } from "@/lib/selection";
 import { CompanySwitcher } from "@/components/company-switcher";
 import { NavLinks } from "@/components/nav-links";
 import { logout } from "@/app/login/actions";
@@ -8,6 +8,7 @@ export async function Header() {
     getCompanies(),
     getSelectedCompanyId(),
   ]);
+  const selectedCompany = companies.find((c) => c.id === selectedId);
 
   return (
     <header className="sticky top-0 z-10 border-b border-zinc-200 bg-white/80 backdrop-blur dark:border-zinc-800 dark:bg-zinc-950/80">
@@ -19,6 +20,14 @@ export async function Header() {
           <NavLinks />
         </div>
         <div className="flex items-center gap-3">
+          {selectedId !== ALL_COMPANIES && selectedCompany?.logoUrl && (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img
+              src={selectedCompany.logoUrl}
+              alt={selectedCompany.name}
+              className="h-7 w-7 rounded-full object-cover"
+            />
+          )}
           <CompanySwitcher companies={companies} selectedId={selectedId} />
           <form action={logout}>
             <button

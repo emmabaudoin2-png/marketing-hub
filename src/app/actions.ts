@@ -36,8 +36,9 @@ export async function updateCompany(formData: FormData) {
   const id = String(formData.get("id") ?? "");
   const name = String(formData.get("name") ?? "").trim();
   const color = String(formData.get("color") ?? "#6366f1");
+  const logoUrl = (String(formData.get("logoUrl") ?? "").trim() || null) as string | null;
   if (!id || !name) return;
-  await prisma.company.update({ where: { id }, data: { name, color } });
+  await prisma.company.update({ where: { id }, data: { name, color, logoUrl } });
   revalidatePath("/", "layout");
 }
 

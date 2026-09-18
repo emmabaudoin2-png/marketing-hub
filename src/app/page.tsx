@@ -14,6 +14,7 @@ import { Card, StatCard, Badge } from "@/components/ui";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { CompareChart } from "@/components/charts/compare-chart";
 import { TaskCheckbox } from "@/components/task-checkbox";
+import { CompanyBadge } from "@/components/company-badge";
 import {
   contentStatusColors,
   contentStatusLabels,
@@ -61,12 +62,23 @@ export default async function DashboardPage() {
                   <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
                     {task.title}
                   </p>
-                  <p className="text-xs text-zinc-500">
-                    {isAll && `${task.company.name} · `}
-                    {task.dueDate
-                      ? format(task.dueDate, "d MMM yyyy", { locale: fr })
-                      : "Sans échéance"}
-                  </p>
+                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+                    {isAll && (
+                      <>
+                        <CompanyBadge
+                          name={task.company.name}
+                          color={task.company.color}
+                          logoUrl={task.company.logoUrl}
+                        />
+                        <span>·</span>
+                      </>
+                    )}
+                    <span>
+                      {task.dueDate
+                        ? format(task.dueDate, "d MMM yyyy", { locale: fr })
+                        : "Sans échéance"}
+                    </span>
+                  </div>
                 </div>
               </div>
               <Badge className={taskPriorityColors[task.priority]}>
@@ -146,12 +158,14 @@ export default async function DashboardPage() {
             <div className="grid gap-5 sm:grid-cols-3">
               {upcomingContentByCompany.map(({ company, items }) => (
                 <div key={company.id}>
-                  <p
-                    className="mb-2 text-xs font-semibold uppercase tracking-wide"
-                    style={{ color: company.color }}
-                  >
-                    {company.name}
-                  </p>
+                  <div className="mb-2 uppercase tracking-wide">
+                    <CompanyBadge
+                      name={company.name}
+                      color={company.color}
+                      logoUrl={company.logoUrl}
+                      className="font-semibold"
+                    />
+                  </div>
                   {items.length === 0 ? (
                     <p className="text-xs text-zinc-400">Aucun contenu planifié.</p>
                   ) : (
