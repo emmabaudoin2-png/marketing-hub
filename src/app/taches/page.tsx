@@ -7,18 +7,33 @@ import { createTask, deleteTask, updateTaskStatus } from "@/app/actions";
 import { Card, Badge } from "@/components/ui";
 import { StatusSelect } from "@/components/status-select";
 import { DeleteButton } from "@/components/delete-button";
+import { TaskFilters } from "@/components/task-filters";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
 import { taskPriorityColors, taskPriorityLabels, taskStatusColors, taskStatusLabels } from "@/lib/labels";
-import type { TaskStatus } from "@prisma/client";
+import type { TaskPriority, TaskStatus } from "@prisma/client";
 
-export default async function TasksPage() {
+type SearchParams = Promise<{ status?: string; priority?: string }>;
+
+export default async function TasksPage({ searchParams }: { searchParams: SearchParams }) {
+  const params = await searchParams;
   const selectedId = await getSelectedCompanyId();
   const isAll = selectedId === ALL_COMPANIES;
+
+  const statusFilter = params.status ?? "";
+  const priorityFilter = params.priority ?? "";
+
+  const where: {
+    companyId?: string;
+    status?: TaskStatus;
+    priority?: TaskPriority;
+  } = { ...companyFilter(selectedId) };
+  if (statusFilter) where.status = statusFilter as TaskStatus;
+  if (priorityFilter) where.priority = priorityFilter as TaskPriority;
 
   const [companies, tasks] = await Promise.all([
     getCompanies(),
     prisma.task.findMany({
-      where: companyFilter(selectedId),
+      where,
       orderBy: [{ status: "asc" }, { dueDate: { sort: "asc", nulls: "last" } }],
       include: { company: true },
     }),
@@ -28,6 +43,8 @@ export default async function TasksPage() {
     value,
     label,
   }));
+
+  const resetHref = "/taches";
 
   return (
     <div className="flex flex-col gap-6">
@@ -89,9 +106,13 @@ export default async function TasksPage() {
         </form>
       </Card>
 
+      <Card>
+        <TaskFilters status={statusFilter} priority={priorityFilter} resetHref={resetHref} />
+      </Card>
+
       <Card title={`Tâches (${tasks.length})`}>
         {tasks.length === 0 ? (
-          <p className="text-sm text-zinc-500">Aucune tâche pour le moment.</p>
+          <p className="text-sm text-zinc-500">Aucune tâche ne correspond.</p>
         ) : (
           <ul className="flex flex-col divide-y divide-zinc-100 dark:divide-zinc-800">
             {tasks.map((task) => (

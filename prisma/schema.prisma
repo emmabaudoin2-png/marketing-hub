@@ -51,6 +51,7 @@ model ContentItem {
   channel     ContentChannel @default(OTHER)
   format      ContentFormat  @default(POST)
   status      ContentStatus  @default(IDEA)
+  publishedUrl String?
   scheduledAt DateTime
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt

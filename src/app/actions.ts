@@ -59,6 +59,9 @@ export async function createContentItem(formData: FormData) {
   const channel = String(formData.get("channel") ?? "OTHER") as ContentChannel;
   const format = String(formData.get("format") ?? "POST") as ContentFormat;
   const status = String(formData.get("status") ?? "IDEA") as ContentStatus;
+  const publishedUrl = (String(formData.get("publishedUrl") ?? "").trim() || null) as
+    | string
+    | null;
   const scheduledAtRaw = String(formData.get("scheduledAt") ?? "");
   if (!companyId || !title || !scheduledAtRaw) return;
 
@@ -70,6 +73,7 @@ export async function createContentItem(formData: FormData) {
       channel,
       format,
       status,
+      publishedUrl,
       scheduledAt: new Date(scheduledAtRaw),
     },
   });
@@ -87,6 +91,9 @@ export async function updateContentItem(formData: FormData) {
   const channel = String(formData.get("channel") ?? "OTHER") as ContentChannel;
   const format = String(formData.get("format") ?? "POST") as ContentFormat;
   const status = String(formData.get("status") ?? "IDEA") as ContentStatus;
+  const publishedUrl = (String(formData.get("publishedUrl") ?? "").trim() || null) as
+    | string
+    | null;
   const scheduledAtRaw = String(formData.get("scheduledAt") ?? "");
   if (!id || !companyId || !title || !scheduledAtRaw) return;
 
@@ -99,6 +106,7 @@ export async function updateContentItem(formData: FormData) {
       channel,
       format,
       status,
+      publishedUrl,
       scheduledAt: new Date(scheduledAtRaw),
     },
   });

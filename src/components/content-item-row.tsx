@@ -125,6 +125,17 @@ export function ContentItemRow({
             />
           </div>
 
+          <div className="sm:col-span-2 lg:col-span-3">
+            <label className={labelClass}>Lien vers la publication (optionnel)</label>
+            <input
+              type="url"
+              name="publishedUrl"
+              defaultValue={item.publishedUrl ?? ""}
+              placeholder="https://instagram.com/p/..."
+              className={inputClass}
+            />
+          </div>
+
           <div className="flex items-center gap-4 sm:col-span-2 lg:col-span-3">
             <button type="submit" disabled={isPending} className={buttonClass}>
               {isPending ? "Enregistrement..." : "Enregistrer"}
@@ -162,6 +173,19 @@ export function ContentItemRow({
         {item.description && <p className="mt-1 text-sm text-zinc-500">{item.description}</p>}
         <p className="mt-1 text-xs text-zinc-400">
           {formatDate(item.scheduledAt, "EEEE d MMMM yyyy", { locale: fr })}
+          {item.publishedUrl && (
+            <>
+              {" · "}
+              <a
+                href={item.publishedUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+              >
+                Voir la publication ↗
+              </a>
+            </>
+          )}
         </p>
       </div>
       <div className="flex items-center gap-3">
