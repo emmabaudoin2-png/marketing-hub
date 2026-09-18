@@ -7,6 +7,7 @@ import clsx from "clsx";
 const links = [
   { href: "/", label: "Tableau de bord" },
   { href: "/calendrier", label: "Calendrier" },
+  { href: "/idees", label: "Idées" },
   { href: "/taches", label: "Tâches" },
   { href: "/entreprises", label: "Entreprises" },
 ];

@@ -17,6 +17,7 @@ model Company {
   contentItems ContentItem[]
   tasks        Task[]
   metrics      MetricEntry[]
+  ideas        Idea[]
 }
 
 enum ContentStatus {
@@ -55,6 +56,18 @@ model ContentItem {
   scheduledAt DateTime
   createdAt   DateTime       @default(now())
   updatedAt   DateTime       @updatedAt
+
+  company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  companyId String
+
+  @@index([companyId])
+}
+
+model Idea {
+  id        String        @id @default(cuid())
+  content   String
+  format    ContentFormat @default(POST)
+  createdAt DateTime      @default(now())
 
   company   Company @relation(fields: [companyId], references: [id], onDelete: Cascade)
   companyId String

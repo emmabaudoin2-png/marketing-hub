@@ -194,3 +194,22 @@ export async function deleteMetricEntry(formData: FormData) {
   revalidatePath("/");
   revalidatePath("/entreprises");
 }
+
+// --- Ideas ---
+
+export async function createIdea(formData: FormData) {
+  const companyId = String(formData.get("companyId") ?? "");
+  const content = String(formData.get("content") ?? "").trim();
+  const format = String(formData.get("format") ?? "POST") as ContentFormat;
+  if (!companyId || !content) return;
+
+  await prisma.idea.create({ data: { companyId, content, format } });
+  revalidatePath("/idees");
+}
+
+export async function deleteIdea(formData: FormData) {
+  const id = String(formData.get("id") ?? "");
+  if (!id) return;
+  await prisma.idea.delete({ where: { id } });
+  revalidatePath("/idees");
+}
