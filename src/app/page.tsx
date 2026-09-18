@@ -13,6 +13,7 @@ import {
 import { Card, StatCard, Badge } from "@/components/ui";
 import { TrendChart } from "@/components/charts/trend-chart";
 import { CompareChart } from "@/components/charts/compare-chart";
+import { TaskCheckbox } from "@/components/task-checkbox";
 import {
   contentStatusColors,
   contentStatusLabels,
@@ -95,16 +96,19 @@ export default async function DashboardPage() {
             <ul className="flex flex-col gap-3">
               {upcomingTasks.map((task) => (
                 <li key={task.id} className="flex items-start justify-between gap-3">
-                  <div>
-                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
-                      {task.title}
-                    </p>
-                    <p className="text-xs text-zinc-500">
-                      {isAll && `${task.company.name} · `}
-                      {task.dueDate
-                        ? format(task.dueDate, "d MMM yyyy", { locale: fr })
-                        : "Sans échéance"}
-                    </p>
+                  <div className="flex items-start gap-2">
+                    <TaskCheckbox id={task.id} />
+                    <div>
+                      <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+                        {task.title}
+                      </p>
+                      <p className="text-xs text-zinc-500">
+                        {isAll && `${task.company.name} · `}
+                        {task.dueDate
+                          ? format(task.dueDate, "d MMM yyyy", { locale: fr })
+                          : "Sans échéance"}
+                      </p>
+                    </div>
                   </div>
                   <Badge className={taskPriorityColors[task.priority]}>
                     {taskPriorityLabels[task.priority]}
