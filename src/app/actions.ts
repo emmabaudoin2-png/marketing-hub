@@ -199,12 +199,14 @@ export async function deleteMetricEntry(formData: FormData) {
 // --- Ideas ---
 
 export async function createIdea(formData: FormData) {
-  const companyId = String(formData.get("companyId") ?? "");
+  const companyIds = formData.getAll("companyIds").map(String).filter(Boolean);
   const content = String(formData.get("content") ?? "").trim();
   const format = String(formData.get("format") ?? "POST") as ContentFormat;
-  if (!companyId || !content) return;
+  if (companyIds.length === 0 || !content) return;
 
-  await prisma.idea.create({ data: { companyId, content, format } });
+  await prisma.idea.createMany({
+    data: companyIds.map((companyId) => ({ companyId, content, format })),
+  });
   revalidatePath("/idees");
 }
 
