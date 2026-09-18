@@ -1,6 +1,7 @@
 import { getCompanies, getSelectedCompanyId } from "@/lib/selection";
 import { CompanySwitcher } from "@/components/company-switcher";
 import { NavLinks } from "@/components/nav-links";
+import { logout } from "@/app/login/actions";
 
 export async function Header() {
   const [companies, selectedId] = await Promise.all([
@@ -17,7 +18,17 @@ export async function Header() {
           </span>
           <NavLinks />
         </div>
-        <CompanySwitcher companies={companies} selectedId={selectedId} />
+        <div className="flex items-center gap-3">
+          <CompanySwitcher companies={companies} selectedId={selectedId} />
+          <form action={logout}>
+            <button
+              type="submit"
+              className="text-sm font-medium text-zinc-500 hover:underline dark:text-zinc-400"
+            >
+              Déconnexion
+            </button>
+          </form>
+        </div>
       </div>
     </header>
   );

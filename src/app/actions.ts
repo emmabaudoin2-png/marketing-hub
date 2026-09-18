@@ -213,3 +213,29 @@ export async function deleteIdea(formData: FormData) {
   await prisma.idea.delete({ where: { id } });
   revalidatePath("/idees");
 }
+
+export async function promoteIdeaToContent(formData: FormData) {
+  const ideaId = String(formData.get("ideaId") ?? "");
+  const scheduledAtRaw = String(formData.get("scheduledAt") ?? "");
+  if (!ideaId || !scheduledAtRaw) return;
+
+  const idea = await prisma.idea.findUnique({ where: { id: ideaId } });
+  if (!idea) return;
+
+  await prisma.$transaction([
+    prisma.contentItem.create({
+      data: {
+        companyId: idea.companyId,
+        title: idea.content,
+        format: idea.format,
+        status: "PLANNED",
+        scheduledAt: new Date(scheduledAtRaw),
+      },
+    }),
+    prisma.idea.delete({ where: { id: ideaId } }),
+  ]);
+
+  revalidatePath("/idees");
+  revalidatePath("/calendrier");
+  revalidatePath("/");
+}

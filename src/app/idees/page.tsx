@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { ALL_COMPANIES, getCompanies, getSelectedCompanyId } from "@/lib/selection";
 import { companyFilter } from "@/lib/queries";
-import { createIdea, deleteIdea } from "@/app/actions";
+import { createIdea, deleteIdea, promoteIdeaToContent } from "@/app/actions";
 import { Card, Badge } from "@/components/ui";
 import { DeleteButton } from "@/components/delete-button";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
@@ -93,7 +93,19 @@ export default async function IdeasPage() {
                     </Badge>
                   )}
                 </div>
-                <DeleteButton id={idea.id} action={deleteIdea} />
+                <div className="flex items-center gap-3">
+                  <form action={promoteIdeaToContent} className="flex items-center gap-2">
+                    <input type="hidden" name="ideaId" value={idea.id} />
+                    <input type="date" name="scheduledAt" required className={`${inputClass} py-1`} />
+                    <button
+                      type="submit"
+                      className="whitespace-nowrap text-xs font-medium text-indigo-600 hover:underline dark:text-indigo-400"
+                    >
+                      Planifier →
+                    </button>
+                  </form>
+                  <DeleteButton id={idea.id} action={deleteIdea} />
+                </div>
               </li>
             ))}
           </ul>
