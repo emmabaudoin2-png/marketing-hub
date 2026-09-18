@@ -135,21 +135,21 @@ export async function deleteContentItem(formData: FormData) {
 // --- Tasks ---
 
 export async function createTask(formData: FormData) {
-  const companyId = String(formData.get("companyId") ?? "");
+  const companyIds = formData.getAll("companyIds").map(String).filter(Boolean);
   const title = String(formData.get("title") ?? "").trim();
   const notes = (String(formData.get("notes") ?? "").trim() || null) as string | null;
   const priority = String(formData.get("priority") ?? "MEDIUM") as TaskPriority;
   const dueDateRaw = String(formData.get("dueDate") ?? "");
-  if (!companyId || !title) return;
+  if (companyIds.length === 0 || !title) return;
 
-  await prisma.task.create({
-    data: {
+  await prisma.task.createMany({
+    data: companyIds.map((companyId) => ({
       companyId,
       title,
       notes,
       priority,
       dueDate: dueDateRaw ? new Date(dueDateRaw) : null,
-    },
+    })),
   });
   revalidatePath("/taches");
   revalidatePath("/");
