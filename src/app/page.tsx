@@ -15,12 +15,7 @@ import { TrendChart } from "@/components/charts/trend-chart";
 import { CompareChart } from "@/components/charts/compare-chart";
 import { TaskCheckbox } from "@/components/task-checkbox";
 import { CompanyBadge } from "@/components/company-badge";
-import {
-  contentStatusColors,
-  contentStatusLabels,
-  taskPriorityColors,
-  taskPriorityLabels,
-} from "@/lib/labels";
+import { contentStatusColors, contentStatusLabels } from "@/lib/labels";
 
 export default async function DashboardPage() {
   const selectedId = await getSelectedCompanyId();
@@ -55,35 +50,30 @@ export default async function DashboardPage() {
       ) : (
         <ul className="flex flex-col gap-3">
           {upcomingTasks.map((task) => (
-            <li key={task.id} className="flex items-start justify-between gap-3">
-              <div className="flex items-start gap-2">
-                <TaskCheckbox id={task.id} />
-                <div>
-                  <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
-                    {task.title}
-                  </p>
-                  <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
-                    {isAll && (
-                      <>
-                        <CompanyBadge
-                          name={task.company.name}
-                          color={task.company.color}
-                          logoUrl={task.company.logoUrl}
-                        />
-                        <span>·</span>
-                      </>
-                    )}
-                    <span>
-                      {task.dueDate
-                        ? format(task.dueDate, "d MMM yyyy", { locale: fr })
-                        : "Sans échéance"}
-                    </span>
-                  </div>
+            <li key={task.id} className="flex items-start gap-2">
+              <TaskCheckbox id={task.id} />
+              <div>
+                <p className="text-sm font-medium text-zinc-800 dark:text-zinc-100">
+                  {task.title}
+                </p>
+                <div className="flex flex-wrap items-center gap-1.5 text-xs text-zinc-500">
+                  {isAll && (
+                    <>
+                      <CompanyBadge
+                        name={task.company.name}
+                        color={task.company.color}
+                        logoUrl={task.company.logoUrl}
+                      />
+                      <span>·</span>
+                    </>
+                  )}
+                  <span>
+                    {task.dueDate
+                      ? format(task.dueDate, "d MMM yyyy", { locale: fr })
+                      : "Sans échéance"}
+                  </span>
                 </div>
               </div>
-              <Badge className={taskPriorityColors[task.priority]}>
-                {taskPriorityLabels[task.priority]}
-              </Badge>
             </li>
           ))}
         </ul>

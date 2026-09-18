@@ -4,18 +4,18 @@ import { prisma } from "@/lib/prisma";
 import { ALL_COMPANIES, getCompanies, getSelectedCompanyId } from "@/lib/selection";
 import { companyFilter } from "@/lib/queries";
 import { createTask, deleteTask, updateTaskStatus } from "@/app/actions";
-import { Card, Badge } from "@/components/ui";
+import { Card } from "@/components/ui";
 import { StatusSelect } from "@/components/status-select";
 import { DeleteButton } from "@/components/delete-button";
 import { TaskFilters } from "@/components/task-filters";
 import { CompanyBadge } from "@/components/company-badge";
 import { inputClass, labelClass, buttonClass } from "@/lib/ui-classes";
-import { taskPriorityColors, taskPriorityLabels, taskStatusColors, taskStatusLabels } from "@/lib/labels";
-import type { Company, Task, TaskPriority, TaskStatus } from "@prisma/client";
+import { taskStatusColors, taskStatusLabels } from "@/lib/labels";
+import type { Company, Task, TaskStatus } from "@prisma/client";
 
 type TaskWithCompany = Task & { company: Company };
 
-type SearchParams = Promise<{ status?: string; priority?: string }>;
+type SearchParams = Promise<{ status?: string }>;
 
 function TaskRow({
   task,
@@ -27,12 +27,7 @@ function TaskRow({
   return (
     <li className="flex flex-wrap items-center justify-between gap-3 py-3">
       <div className="min-w-0 flex-1">
-        <div className="flex flex-wrap items-center gap-2">
-          <p className="font-medium text-zinc-800 dark:text-zinc-100">{task.title}</p>
-          <Badge className={taskPriorityColors[task.priority]}>
-            {taskPriorityLabels[task.priority]}
-          </Badge>
-        </div>
+        <p className="font-medium text-zinc-800 dark:text-zinc-100">{task.title}</p>
         {task.notes && <p className="mt-1 text-sm text-zinc-500">{task.notes}</p>}
         <p className="mt-1 text-xs text-zinc-400">
           {task.dueDate
@@ -60,15 +55,12 @@ export default async function TasksPage({ searchParams }: { searchParams: Search
   const isAll = selectedId === ALL_COMPANIES;
 
   const statusFilter = params.status ?? "";
-  const priorityFilter = params.priority ?? "";
 
   const where: {
     companyId?: string;
     status?: TaskStatus;
-    priority?: TaskPriority;
   } = { ...companyFilter(selectedId) };
   if (statusFilter) where.status = statusFilter as TaskStatus;
-  if (priorityFilter) where.priority = priorityFilter as TaskPriority;
 
   const [companies, tasks] = await Promise.all([
     getCompanies(),
@@ -101,7 +93,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Search
         <h1 className="text-2xl font-semibold text-zinc-900 dark:text-white">
           Tâches marketing
         </h1>
-        <p className="text-sm text-zinc-500">Suivez ce qui reste à faire, par priorité.</p>
+        <p className="text-sm text-zinc-500">Suivez ce qui reste à faire.</p>
       </div>
 
       <Card title="Ajouter une tâche">
@@ -136,21 +128,10 @@ export default async function TasksPage({ searchParams }: { searchParams: Search
             )}
           </div>
 
-          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div className="sm:col-span-1 lg:col-span-2">
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div>
               <label className={labelClass}>Titre</label>
               <input name="title" required className={inputClass} placeholder="Ex: Préparer newsletter" />
-            </div>
-
-            <div>
-              <label className={labelClass}>Priorité</label>
-              <select name="priority" className={inputClass} defaultValue="MEDIUM">
-                {Object.entries(taskPriorityLabels).map(([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ))}
-              </select>
             </div>
 
             <div>
@@ -173,7 +154,7 @@ export default async function TasksPage({ searchParams }: { searchParams: Search
       </Card>
 
       <Card>
-        <TaskFilters status={statusFilter} priority={priorityFilter} resetHref={resetHref} />
+        <TaskFilters status={statusFilter} resetHref={resetHref} />
       </Card>
 
       <div className={isAll ? "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" : ""}>

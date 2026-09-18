@@ -7,7 +7,6 @@ import type {
   ContentFormat,
   ContentStatus,
   MetricType,
-  TaskPriority,
   TaskStatus,
 } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
@@ -138,7 +137,6 @@ export async function createTask(formData: FormData) {
   const companyIds = formData.getAll("companyIds").map(String).filter(Boolean);
   const title = String(formData.get("title") ?? "").trim();
   const notes = (String(formData.get("notes") ?? "").trim() || null) as string | null;
-  const priority = String(formData.get("priority") ?? "MEDIUM") as TaskPriority;
   const dueDateRaw = String(formData.get("dueDate") ?? "");
   if (companyIds.length === 0 || !title) return;
 
@@ -147,7 +145,6 @@ export async function createTask(formData: FormData) {
       companyId,
       title,
       notes,
-      priority,
       dueDate: dueDateRaw ? new Date(dueDateRaw) : null,
     })),
   });

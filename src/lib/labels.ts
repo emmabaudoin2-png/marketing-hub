@@ -3,7 +3,6 @@ import type {
   ContentFormat,
   ContentStatus,
   MetricType,
-  TaskPriority,
   TaskStatus,
 } from "@prisma/client";
 
@@ -56,18 +55,6 @@ export const taskStatusColors: Record<TaskStatus, string> = {
   TODO: "bg-zinc-100 text-zinc-700",
   IN_PROGRESS: "bg-amber-100 text-amber-700",
   DONE: "bg-emerald-100 text-emerald-700",
-};
-
-export const taskPriorityLabels: Record<TaskPriority, string> = {
-  LOW: "Basse",
-  MEDIUM: "Moyenne",
-  HIGH: "Haute",
-};
-
-export const taskPriorityColors: Record<TaskPriority, string> = {
-  LOW: "bg-zinc-100 text-zinc-700",
-  MEDIUM: "bg-blue-100 text-blue-700",
-  HIGH: "bg-red-100 text-red-700",
 };
 
 export const metricTypeLabels: Record<MetricType, string> = {
